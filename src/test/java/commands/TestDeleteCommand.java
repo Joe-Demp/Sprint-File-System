@@ -1,5 +1,6 @@
 package commands;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.FileSystem;
@@ -8,7 +9,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 
 public class TestDeleteCommand {
-    FileSystem mockFS = mock(FileSystem.class);
+    static FileSystem mockFS;
+
+    @BeforeAll
+    static void beforeAll() {
+        mockFS = mock(FileSystem.class);
+    }
 
     @Test
     public void test_OneArgConstructor() {
