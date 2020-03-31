@@ -50,20 +50,20 @@ public class DeleteCommand implements Command {
 
         if (file.isFile() && fileAction) {
             result = file.delete();
-            return new DeleteCommandResponse(result,
+            return new DeleteCommandResponse(result, file,
                     result ?
                             String.format("File %s deleted", path) :
-                            "");
+                            String.format("File %s not deleted", path));
         } else if (file.isDirectory() && directoryAction) {
             result = file.delete();
-            return new DeleteCommandResponse(result,
+            return new DeleteCommandResponse(result, file,
                     result ?
                             String.format("Directory %s deleted", path) :
-                            "");
+                            String.format("Directory %s not deleted", path));
         }
 
         // Failure if no permission to delete file or directory
-        return new DeleteCommandResponse(false, "Command had no permissions.");
+        return new DeleteCommandResponse(false, file, "Command had no permissions.");
     }
 
     @Override
@@ -99,20 +99,26 @@ public class DeleteCommand implements Command {
     /**
      * A class to model responses from delete commands
      */
-    private static class DeleteCommandResponse implements CommandResponse {
+    public static class DeleteCommandResponse implements CommandResponse {
         private boolean success;
+        private File file;
         private String message;
 
-        public DeleteCommandResponse(boolean success, String message) {
+        public DeleteCommandResponse(boolean success, File file, String message) {
             this.success = success;
 
             String indicator = success ? "SUCCESS - File Deleted" : "FAILURE - File Not Deleted";
-            this.message = String.format("%s -- %s: %s", Instant.now(), indicator, message);
+            this.message = String.format("%s -- %s - %s: %s", Instant.now(), file.toString(), indicator, message);
         }
 
         @Override
         public boolean success() {
             return success;
+        }
+
+        @Override
+        public File file() {
+            return file;
         }
 
         @Override
