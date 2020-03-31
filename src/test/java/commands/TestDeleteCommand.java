@@ -105,4 +105,6 @@ public class TestDeleteCommand {
         assertFalse(response.success());
         assertTrue(response.message().endsWith(expectedMessageSuffix));
     }
+
+    // TODO tests for a positive action i.e. a correct deletion of a file or directory
 }
