@@ -1,5 +1,7 @@
 package util;
 
+import exceptions.UnsupportedSetException;
+
 import java.nio.file.Path;
 
 /**
@@ -26,12 +28,18 @@ public interface FileSystemAction {
      */
     boolean isDirectoryAction();
 
-    void setDirectoryAction(boolean canActOnDirectories);
+    /**
+     * @param canActOnDirectories
+     */
+    void setDirectoryAction(boolean canActOnDirectories) throws UnsupportedSetException;
 
     /**
      * @return true if this action is for files, false otherwise
      */
     boolean isFileAction();
 
-    void setFileAction(boolean canActOnFiles);
+    /**
+     * @param canActOnFiles
+     */
+    void setFileAction(boolean canActOnFiles) throws UnsupportedSetException;
 }

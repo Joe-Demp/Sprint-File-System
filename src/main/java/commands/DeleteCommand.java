@@ -2,7 +2,6 @@ package commands;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.time.Instant;
 
 public class DeleteCommand implements Command {
     private boolean directoryAction;
@@ -99,31 +98,13 @@ public class DeleteCommand implements Command {
     /**
      * A class to model responses from delete commands
      */
-    public static class DeleteCommandResponse implements CommandResponse {
-        private boolean success;
-        private File file;
-        private String message;
-
+    public static class DeleteCommandResponse extends CommandResponse {
         public DeleteCommandResponse(boolean success, File file, String message) {
-            this.success = success;
-
-            String indicator = success ? "SUCCESS - File Deleted" : "FAILURE - File Not Deleted";
-            this.message = String.format("%s -- %s - %s: %s", Instant.now(), file.toString(), indicator, message);
+            super(success, file, message, indicator(success));
         }
 
-        @Override
-        public boolean success() {
-            return success;
-        }
-
-        @Override
-        public File file() {
-            return file;
-        }
-
-        @Override
-        public String message() {
-            return message;
+        private static String indicator(boolean success) {
+            return success ? "SUCCESS - File Deleted" : "FAILURE - File Not Deleted";
         }
     }
 }
