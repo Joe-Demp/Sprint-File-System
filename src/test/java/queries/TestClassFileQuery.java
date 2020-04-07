@@ -96,12 +96,28 @@ public class TestClassFileQuery {
 
     @Test
     public void test_executeFailure_fileExists() {
-        fail("Not implemented");
+        QueryResponse response = query2.execute();
+
+        assertNotNull(response);
+        assertFalse(response.success());
+        assertEquals(mockFile2, response.file());
+
+        String expectedMessageSuffix = String.format(" %s - %s: %s", path2, ".class file not found", "file2.txt not a .class file");
+        String actualMessageSuffix = response.message().split("--")[1];
+        assertEquals(expectedMessageSuffix, actualMessageSuffix);
     }
 
     @Test
     public void test_executeFailure_noFile() {
-        fail("Not implemented");
+        QueryResponse response = query3.execute();
+
+        assertNotNull(response);
+        assertFalse(response.success());
+        assertEquals(mockFile3, response.file());
+
+        String expectedMessageSuffix = String.format(" %s - %s: %s", path3, ".class file not found", "file3.class does not exist");
+        String actualMessageSuffix = response.message().split("--")[1];
+        assertEquals(expectedMessageSuffix, actualMessageSuffix);
     }
 
     @Test
