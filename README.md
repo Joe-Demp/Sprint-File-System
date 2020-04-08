@@ -32,3 +32,6 @@
 3. Application must be able to execute commands on the file system and emit the results to file or to a data structure
 4. The application should, in some way, present information in a console or GUI
 5. Most importantly, SprintFS must be reusable insofar as it can be called from any interface 
+
+####Inspired by
+Jason Taylor's Clean Architecture Project: https://github.com/jasontaylordev/CleanArchitecture
