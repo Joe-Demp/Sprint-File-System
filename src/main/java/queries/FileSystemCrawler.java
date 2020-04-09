@@ -1,8 +1,12 @@
 package queries;
 
+import util.FileSystemActionResponse;
 import util.QueryHandler;
+import util.ResponseHandler;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -13,19 +17,30 @@ import java.util.Queue;
 public class FileSystemCrawler implements Runnable {
     private Path searchRoot;
     private Class<? extends Query> queryClass;
-    private QueryHandler handler;
+    private Constructor<? extends Query> queryConstructor;
+    private QueryHandler queryHandler;
+    private ResponseHandler responseHandler;
+
 
     /**
      * Creates a file system crawler, starting from the specified path and querying files using the specified query
      *
-     * @param searchRoot the directory
-     * @param queryClass
-     * @param handler
+     * @param searchRoot      the {@code Path} of the directory to start crawling the file system from
+     * @param queryClass      the {@code Class} object that represents the {@code Query} to apply
+     * @param queryHandler    the {@code Handler} that executes the queries, described by {@code queryClass}
+     * @param responseHandler the {@code Handler} that routes QueryResponses to the correct endpoint
+     * @throws NoSuchMethodException if the specified {@code queryClass} does not have a constructor that<br>
+     *                               accepts a single {@code Path} object
      */
-    public FileSystemCrawler(Path searchRoot, Class<? extends Query> queryClass, QueryHandler handler) {
+    public FileSystemCrawler(Path searchRoot,
+                             Class<? extends Query> queryClass,
+                             QueryHandler queryHandler,
+                             ResponseHandler responseHandler) throws NoSuchMethodException {
         setSearchRoot(searchRoot);
         this.queryClass = queryClass;
-        this.handler = handler;
+        this.queryHandler = queryHandler;
+        this.responseHandler = responseHandler;
+        this.queryConstructor = queryClass.getConstructor(Path.class);
     }
 
     @Override
@@ -35,15 +50,45 @@ public class FileSystemCrawler implements Runnable {
         pathQueue.add(searchRoot);
 
         while (!pathQueue.isEmpty()) {
-            File file = pathQueue.remove().toFile();
+            Path path = pathQueue.remove();
+            File file = path.toFile();
 
             if (file.isDirectory()) {
-                for (File child : file.listFiles()) {
-                    pathQueue.add(child.toPath());
-                }
+                enqueueChildren(pathQueue, file);
             } else {
-                // create a query and pass it to the handler
+                queryFile(path);
             }
+        }
+
+        // todo add some sort of 'queries thread finished' section here
+    }
+
+    /**
+     * @param queue
+     * @param directory
+     */
+    private void enqueueChildren(Queue<Path> queue, File directory) {
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File child : files) {
+                queue.add(child.toPath());
+            }
+        }
+    }
+
+    /**
+     * @param path
+     */
+    private void queryFile(Path path) {
+        try {
+            Query query = queryConstructor.newInstance(path);
+            FileSystemActionResponse response = queryHandler.handle(query);
+            responseHandler.handle(response);
+        } catch (InstantiationException
+                | IllegalAccessException
+                | InvocationTargetException e) {
+            e.printStackTrace();
+            // TODO add logging here
         }
     }
 
