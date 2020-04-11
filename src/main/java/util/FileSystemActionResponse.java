@@ -42,4 +42,9 @@ public abstract class FileSystemActionResponse {
     public String message() {
         return message;
     }
+
+    @Override
+    public String toString() {
+        return message();
+    }
 }

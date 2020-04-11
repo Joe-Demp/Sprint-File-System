@@ -29,7 +29,7 @@ public class FileSystemCrawler implements Runnable {
      * @param queryClass      the {@code Class} object that represents the {@code Query} to apply
      * @param queryHandler    the {@code Handler} that executes the queries, described by {@code queryClass}
      * @param responseHandler the {@code Handler} that routes QueryResponses to the correct endpoint
-     * @throws NoSuchMethodException if the specified {@code queryClass} does not have a constructor that<br>
+     * @throws NoSuchMethodException if the specified {@code queryClass} does not have a constructor that
      *                               accepts a single {@code Path} object
      */
     public FileSystemCrawler(Path searchRoot,

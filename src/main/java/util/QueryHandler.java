@@ -6,6 +6,6 @@ package util;
 public class QueryHandler implements FileSystemActionHandler {
     @Override
     public FileSystemActionResponse handle(FileSystemAction action) {
-        return null;
+        return action.execute();
     }
 }
