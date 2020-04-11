@@ -6,3 +6,5 @@
  * </p>
  */
 package util;
+
+// TODO ditch Path objects altogether. Use files exclusively.

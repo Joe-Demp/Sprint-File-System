@@ -5,7 +5,11 @@ import exceptions.UnsupportedSetException;
 import java.nio.file.Path;
 
 /**
- * TODO 26/03/2020  Write the javadoc for FileSystemAction
+ * A contract for any action in this solution that needs to access the file system.
+ * <p>
+ * This interface contains the basic supports that are required by clients using queries, commands or any other
+ * facilities of this solution. This is to support the application of the CQRS design pattern in this solution.
+ * </p>
  */
 public interface FileSystemAction {
     /**
@@ -29,7 +33,7 @@ public interface FileSystemAction {
     boolean isDirectoryAction();
 
     /**
-     * @param canActOnDirectories
+     * @param canActOnDirectories true if you want this action to work on directories, false otherwise
      */
     void setDirectoryAction(boolean canActOnDirectories) throws UnsupportedSetException;
 
@@ -39,7 +43,7 @@ public interface FileSystemAction {
     boolean isFileAction();
 
     /**
-     * @param canActOnFiles
+     * @param canActOnFiles true if you want this action to work on files, false otherwise
      */
     void setFileAction(boolean canActOnFiles) throws UnsupportedSetException;
 }

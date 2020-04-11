@@ -3,6 +3,9 @@ package commands;
 import java.io.File;
 import java.nio.file.Path;
 
+/**
+ * TODO write the javadoc 11/04/2020
+ */
 public class DeleteCommand implements Command {
     private boolean directoryAction;
     private Path path;

@@ -1,11 +1,13 @@
 package util;
 
+import queries.QueryResponse;
+
 /**
- * TODO 26/03/2020  Write javadoc for QueryHandler
+ * A class to execute Query objects and return their QueryResponses
  */
 public class QueryHandler implements FileSystemActionHandler {
     @Override
-    public FileSystemActionResponse handle(FileSystemAction action) {
-        return action.execute();
+    public QueryResponse handle(FileSystemAction query) {
+        return (QueryResponse) query.execute();
     }
 }

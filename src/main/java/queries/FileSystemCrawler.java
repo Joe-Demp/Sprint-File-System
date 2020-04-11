@@ -60,15 +60,19 @@ public class FileSystemCrawler implements Runnable {
             }
         }
 
-        // todo add some sort of 'queries thread finished' section here
+        System.out.printf("FileSystemCrawler.run finished with query %s", queryClass);
     }
 
     /**
-     * @param queue
-     * @param directory
+     * Adds files from a directory onto the Breadth First Queue.
+     * If {@code directory} is not a directory on the file system, this method does nothing
+     *
+     * @param queue     the {@code Queue} of {@code Path} objects used to do Breadth First Search on the file system
+     * @param directory the {@code File} that represents the directory with files to add to queue
      */
     private void enqueueChildren(Queue<Path> queue, File directory) {
         File[] files = directory.listFiles();
+
         if (files != null) {
             for (File child : files) {
                 queue.add(child.toPath());
@@ -77,7 +81,10 @@ public class FileSystemCrawler implements Runnable {
     }
 
     /**
-     * @param path
+     * Constructs a {@code Query} of the type specified in this class's constructor for the file located at the given
+     * {@code Path}
+     *
+     * @param path the location of the file to be queried
      */
     private void queryFile(Path path) {
         try {
@@ -93,7 +100,11 @@ public class FileSystemCrawler implements Runnable {
     }
 
     /**
-     * @param searchRoot
+     * Sets the root of the Breadth First Tree for this {@code FileSystemCrawler}. Search begins from this point.
+     *
+     * @param searchRoot The location to begin a file system crawl from. Ideally this should be a directory. If a file
+     *                   is specified, the {@code FileSystemCrawler} will begin search from the parent directory of said
+     *                   file
      */
     private void setSearchRoot(Path searchRoot) {
         Path path = searchRoot;
