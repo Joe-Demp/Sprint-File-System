@@ -3,5 +3,3 @@
  * the core handlers etc.
  */
 package util;
-
-// TODO ditch Path objects altogether. Use files exclusively.

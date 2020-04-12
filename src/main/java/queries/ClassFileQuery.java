@@ -3,20 +3,18 @@ package queries;
 import exceptions.UnsupportedSetException;
 
 import java.io.File;
-import java.nio.file.Path;
 
 public class ClassFileQuery implements Query {
     public static final String extension = ".class";
-    private Path path;
+    private File file;
 
-    public ClassFileQuery(Path path) {
-        setPath(path);
+    public ClassFileQuery(File file) {
+        setFile(file);
     }
 
     @Override
     public QueryResponse execute() {
         ClassFileQueryResponse response;
-        File file = path.toFile();
         String msg;
 
         if (!file.exists()) {
@@ -34,13 +32,13 @@ public class ClassFileQuery implements Query {
     }
 
     @Override
-    public Path getPath() {
-        return path;
+    public File getFile() {
+        return file;
     }
 
     @Override
-    public void setPath(Path path) {
-        this.path = path;
+    public void setFile(File file) {
+        this.file = file;
     }
 
     @Override
@@ -51,7 +49,9 @@ public class ClassFileQuery implements Query {
     @Override
     public void setDirectoryAction(boolean canActOnDirectories) throws UnsupportedSetException {
         if (canActOnDirectories) {
-            throw new UnsupportedSetException(String.format("Can't set %s to act on a directory", this.getClass()));
+            throw new UnsupportedSetException(
+                    String.format("Can't set %s to act on a directory", ClassFileQuery.class)
+            );
         }
     }
 
@@ -63,7 +63,9 @@ public class ClassFileQuery implements Query {
     @Override
     public void setFileAction(boolean canActOnFiles) throws UnsupportedSetException {
         if (!canActOnFiles) {
-            throw new UnsupportedSetException(String.format("%s can only be set to act on files.", this.getClass()));
+            throw new UnsupportedSetException(
+                    String.format("%s can only be set to act on files.", ClassFileQuery.class)
+            );
         }
     }
 

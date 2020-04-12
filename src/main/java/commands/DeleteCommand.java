@@ -1,44 +1,43 @@
 package commands;
 
 import java.io.File;
-import java.nio.file.Path;
 
 /**
  * A command to delete files or directories
  */
 public class DeleteCommand implements Command {
     private boolean directoryAction;
-    private Path path;
+    private File file;
     private boolean fileAction;
 
     /**
      * Constructs a DeleteCommand for a file with the specified path
      *
-     * @param path the path of the file to delete
+     * @param file the path of the file to delete
      */
-    public DeleteCommand(Path path) {
-        this(path, false, true);
+    public DeleteCommand(File file) {
+        this(file, false, true);
     }
 
     /**
      * Constructs a DeleteCommand for a file or directory at the specified path
      *
-     * @param path          the path of the file or directory to delete
+     * @param file          the path of the file or directory to delete
      * @param onDirectories true if the command acts on directories, false if not
      */
-    public DeleteCommand(Path path, boolean onDirectories) {
-        this(path, onDirectories, true);
+    public DeleteCommand(File file, boolean onDirectories) {
+        this(file, onDirectories, true);
     }
 
     /**
      * Constructs a DeleteCommand for a file or directory at the specified path
      *
-     * @param path          the path of the file or directory to delete
+     * @param file          the path of the file or directory to delete
      * @param onDirectories true if the command acts on directories, false if not
      * @param onFiles       true if the command acts on files, false if not
      */
-    public DeleteCommand(Path path, boolean onDirectories, boolean onFiles) {
-        setPath(path);
+    public DeleteCommand(File file, boolean onDirectories, boolean onFiles) {
+        setFile(file);
         setDirectoryAction(onDirectories);
         setFileAction(onFiles);
     }
@@ -47,21 +46,20 @@ public class DeleteCommand implements Command {
     public CommandResponse execute() {
         // Checks that this command matches the given file type (file or directory)
         //  if all good, execute delete return a positive response
-        File file = path.toFile();
         boolean result;
 
         if (file.isFile() && fileAction) {
             result = file.delete();
             return new DeleteCommandResponse(result, file,
                     result ?
-                            String.format("File %s deleted", path) :
-                            String.format("File %s not deleted", path));
+                            String.format("File %s deleted", file) :
+                            String.format("File %s not deleted", file));
         } else if (file.isDirectory() && directoryAction) {
             result = file.delete();
             return new DeleteCommandResponse(result, file,
                     result ?
-                            String.format("Directory %s deleted", path) :
-                            String.format("Directory %s not deleted", path));
+                            String.format("Directory %s deleted", file) :
+                            String.format("Directory %s not deleted", file));
         }
 
         // Failure if no permission to delete file or directory
@@ -69,13 +67,13 @@ public class DeleteCommand implements Command {
     }
 
     @Override
-    public Path getPath() {
-        return path;
+    public File getFile() {
+        return file;
     }
 
     @Override
-    public void setPath(Path path) {
-        this.path = path;
+    public void setFile(File file) {
+        this.file = file;
     }
 
     @Override

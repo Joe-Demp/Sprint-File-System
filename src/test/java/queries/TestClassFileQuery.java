@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -17,10 +16,6 @@ public class TestClassFileQuery {
     public static final String path1 = "/j/myfiles/file1.class";
     public static final String path2 = "/j/myfiles/file2.txt";
     public static final String path3 = "/j/myfiles/file3.class";
-
-    public static Path mockPath1;
-    public static Path mockPath2;
-    public static Path mockPath3;
 
     public static File mockFile1;   // a class file that exists
     public static File mockFile2;   // a non-class file that exists
@@ -32,20 +27,9 @@ public class TestClassFileQuery {
 
     @BeforeAll
     static void setup() {
-        setupFiles();
-        setupPaths();
-    }
-
-    private static void setupFiles() {
         mockFile1 = makeMockFile(path1, "file1.class", true);
         mockFile2 = makeMockFile(path2, "file2.txt", true);
         mockFile3 = makeMockFile(path3, "file3.class", false);
-    }
-
-    private static void setupPaths() {
-        mockPath1 = makeMockPath(mockFile1);
-        mockPath2 = makeMockPath(mockFile2);
-        mockPath3 = makeMockPath(mockFile3);
     }
 
     private static File makeMockFile(String path, String filename, boolean exists) {
@@ -56,17 +40,11 @@ public class TestClassFileQuery {
         return mockFile;
     }
 
-    private static Path makeMockPath(File mockFile) {
-        Path mockPath = mock(Path.class);
-        when(mockPath.toFile()).thenReturn(mockFile);
-        return mockPath;
-    }
-
     @BeforeEach
     public void beforeEach() {
-        query1 = new ClassFileQuery(mockPath1);
-        query2 = new ClassFileQuery(mockPath2);
-        query3 = new ClassFileQuery(mockPath3);
+        query1 = new ClassFileQuery(mockFile1);
+        query2 = new ClassFileQuery(mockFile2);
+        query3 = new ClassFileQuery(mockFile3);
     }
 
     @AfterEach
@@ -76,7 +54,7 @@ public class TestClassFileQuery {
 
     @Test
     public void test_constructor() {
-        assertEquals(mockPath1, query1.getPath());
+        assertEquals(mockFile1, query1.getFile());
         assertFalse(query1.isDirectoryAction());
         assertTrue(query1.isFileAction());
     }
@@ -121,11 +99,11 @@ public class TestClassFileQuery {
     }
 
     @Test
-    public void test_get_set_Path() {
-        assertEquals(mockPath1, query1.getPath());
+    public void test_get_set_File() {
+        assertEquals(mockFile1, query1.getFile());
 
-        query1.setPath(mockPath2);
-        assertEquals(mockPath2, query1.getPath());
+        query1.setFile(mockFile2);
+        assertEquals(mockFile2, query1.getFile());
     }
 
     @Test

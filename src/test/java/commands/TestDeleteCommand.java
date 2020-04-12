@@ -8,18 +8,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.File;
 import java.nio.file.FileSystem;
-import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class TestDeleteCommand {
-    public static final String testFilePath = "/j/home/myfiles/dogs.pdf";
     public static FileSystem mockFS;
-    public static Path mockPath1;
-    public static Path mockPath2;
     public static File mockFile1;
+    public static File mockFile2;
 
     @BeforeAll
     static void beforeAll() {
@@ -27,20 +23,15 @@ public class TestDeleteCommand {
         //      Maybe if I just want to get the responses.
         mockFS = mock(FileSystem.class);
 
-        mockPath1 = mock(Path.class);
-        mockPath2 = mock(Path.class);
-
         mockFile1 = mock(File.class);
-
-        when(mockFS.getPath(testFilePath)).thenReturn(mockPath1);
-        when(mockPath1.toFile()).thenReturn(mockFile1);
+        mockFile2 = mock(File.class);
     }
 
     @Test
     public void test_OneArgConstructor() {
-        DeleteCommand command = new DeleteCommand(mockPath1);
+        DeleteCommand command = new DeleteCommand(mockFile1);
 
-        assertEquals(mockPath1, command.getPath());
+        assertEquals(mockFile1, command.getFile());
         assertFalse(command.isDirectoryAction());
         assertTrue(command.isFileAction());
     }
@@ -49,9 +40,9 @@ public class TestDeleteCommand {
     @ValueSource(strings = {"true", "false"})
     public void test_TwoArgConstructor(String canActOnDirectories) {
         boolean onDirectories = Boolean.parseBoolean(canActOnDirectories);
-        DeleteCommand command = new DeleteCommand(mockPath1, onDirectories);
+        DeleteCommand command = new DeleteCommand(mockFile1, onDirectories);
 
-        assertEquals(mockPath1, command.getPath());
+        assertEquals(mockFile1, command.getFile());
         assertEquals(onDirectories, command.isDirectoryAction());
         assertTrue(command.isFileAction());
     }
@@ -61,25 +52,25 @@ public class TestDeleteCommand {
     public void test_ThreeArgConstructor(String canActOnDirectories, String canActOnFiles) {
         boolean onDirectories = Boolean.parseBoolean(canActOnDirectories);
         boolean onFiles = Boolean.parseBoolean(canActOnFiles);
-        DeleteCommand command = new DeleteCommand(mockPath1, onDirectories, onFiles);
+        DeleteCommand command = new DeleteCommand(mockFile1, onDirectories, onFiles);
 
-        assertEquals(mockPath1, command.getPath());
+        assertEquals(mockFile1, command.getFile());
         assertEquals(onDirectories, command.isDirectoryAction());
         assertEquals(onFiles, command.isFileAction());
     }
 
     @Test
-    public void test_setPath() {
-        DeleteCommand command = new DeleteCommand(mockPath1);
-        assertEquals(mockPath1, command.getPath());
+    public void test_setFile() {
+        DeleteCommand command = new DeleteCommand(mockFile1);
+        assertEquals(mockFile1, command.getFile());
 
-        command.setPath(mockPath2);
-        assertEquals(mockPath2, command.getPath());
+        command.setFile(mockFile2);
+        assertEquals(mockFile2, command.getFile());
     }
 
     @Test
     public void test_setDirectoryAction() {
-        DeleteCommand command = new DeleteCommand(mockPath1, true);
+        DeleteCommand command = new DeleteCommand(mockFile1, true);
         assertTrue(command.isDirectoryAction());
 
         command.setDirectoryAction(false);
@@ -88,7 +79,7 @@ public class TestDeleteCommand {
 
     @Test
     public void test_setFileAction() {
-        DeleteCommand command = new DeleteCommand(mockPath1, true, true);
+        DeleteCommand command = new DeleteCommand(mockFile1, true, true);
         assertTrue(command.isFileAction());
 
         command.setFileAction(false);
@@ -97,7 +88,7 @@ public class TestDeleteCommand {
 
     @Test
     public void test_execute_noPermissions() {
-        DeleteCommand command = new DeleteCommand(mockPath1, false, false);
+        DeleteCommand command = new DeleteCommand(mockFile1, false, false);
         CommandResponse response = command.execute();
         String expectedMessageSuffix = " FAILURE - File Not Deleted: Command had no permissions.";
 

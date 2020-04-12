@@ -2,7 +2,7 @@ package util;
 
 import exceptions.UnsupportedSetException;
 
-import java.nio.file.Path;
+import java.io.File;
 
 /**
  * A contract for any action in this solution that needs to access the file system.
@@ -18,14 +18,14 @@ public interface FileSystemAction {
     FileSystemActionResponse execute();
 
     /**
-     * @return the path of the object that this action targets
+     * @return the file that this action targets
      */
-    Path getPath();
+    File getFile();
 
     /**
-     * @param path the path to the object that the action is to target
+     * @param file the file that the action is to target
      */
-    void setPath(Path path);
+    void setFile(File file);
 
     /**
      * @return true if this action is for directories, false otherwise
