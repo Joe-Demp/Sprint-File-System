@@ -4,7 +4,7 @@ import java.io.File;
 import java.nio.file.Path;
 
 /**
- * TODO write the javadoc 11/04/2020
+ * A command to delete files or directories
  */
 public class DeleteCommand implements Command {
     private boolean directoryAction;
@@ -101,7 +101,15 @@ public class DeleteCommand implements Command {
     /**
      * A class to model responses from delete commands
      */
-    public static class DeleteCommandResponse extends CommandResponse {
+    private static class DeleteCommandResponse extends CommandResponse {
+        /**
+         * Calls the {@code FileSystemActionResponse} constructor
+         *
+         * @param success true if the {@code DeleteCommand} should have worked successfully. i.e. If the
+         *                {@code DeleteCommand} has permissions to delete the {@code File} specified
+         * @param file    the {@code File} that was to be deleted
+         * @param message an explanation of this {@code DeleteResponse}
+         */
         public DeleteCommandResponse(boolean success, File file, String message) {
             super(success, file, message, indicator(success));
         }

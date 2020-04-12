@@ -4,7 +4,7 @@ import java.io.File;
 import java.time.Instant;
 
 /**
- * TODO 26/03/2020  Write the javadoc for FileSystemActionResponse
+ * A DTO specifying the results of a {@code FileSystemAction}
  */
 public abstract class FileSystemActionResponse {
     /**

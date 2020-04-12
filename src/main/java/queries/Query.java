@@ -3,7 +3,7 @@ package queries;
 import util.FileSystemAction;
 
 /**
- * TODO: 26/03/2020  Write the javadoc for Query
+ * A template for actions that gather information about the file system
  */
 public interface Query extends FileSystemAction {
     QueryResponse execute();
