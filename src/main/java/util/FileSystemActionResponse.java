@@ -31,7 +31,7 @@ public abstract class FileSystemActionResponse {
     public FileSystemActionResponse(boolean success, File file, String message, String indicator) {
         this.success = success;
         this.file = file;
-        this.message = String.format(Format, Instant.now(), file.toString(), indicator, message);
+        this.message = String.format(Format, Instant.now(), file, indicator, message);
     }
 
     /**
