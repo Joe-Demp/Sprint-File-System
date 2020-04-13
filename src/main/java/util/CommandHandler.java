@@ -1,8 +1,13 @@
 package util;
 
+import commands.CommandResponse;
+
+/**
+ * TODO fill in
+ */
 public class CommandHandler implements FileSystemActionHandler {
     @Override
-    public FileSystemActionResponse handle(FileSystemAction action) {
-        return null;
+    public CommandResponse handle(FileSystemAction command) {
+        return (CommandResponse) command.execute();
     }
 }

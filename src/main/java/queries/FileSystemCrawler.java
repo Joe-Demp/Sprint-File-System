@@ -1,13 +1,11 @@
 package queries;
 
-import util.FileSystemActionResponse;
 import util.QueryHandler;
 import util.ResponseHandler;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -41,7 +39,7 @@ public class FileSystemCrawler implements Runnable {
         this.queryClass = queryClass;
         this.queryHandler = queryHandler;
         this.responseHandler = responseHandler;
-        this.queryConstructor = queryClass.getConstructor(Path.class);
+        this.queryConstructor = queryClass.getConstructor(File.class);
     }
 
     @Override
@@ -87,7 +85,7 @@ public class FileSystemCrawler implements Runnable {
     private void queryFile(File file) {
         try {
             Query query = queryConstructor.newInstance(file);
-            FileSystemActionResponse response = queryHandler.handle(query);
+            QueryResponse response = queryHandler.handle(query);
             responseHandler.handle(response);
         } catch (InstantiationException
                 | IllegalAccessException

@@ -57,6 +57,9 @@ public abstract class FileSystemActionResponse {
         return message;
     }
 
+    /**
+     * @return the same result as calling method {@link #message()}
+     */
     @Override
     public String toString() {
         return message();
