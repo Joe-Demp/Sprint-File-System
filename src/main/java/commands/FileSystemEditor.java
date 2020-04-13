@@ -32,7 +32,7 @@ public class FileSystemEditor implements Runnable {
             runCommand(file);
         }
 
-        System.out.printf("FileSystemEditor.run finished with command %s", commandClass);
+        System.out.printf("FileSystemEditor.run finished with command %s.\n", commandClass);
     }
 
     /**

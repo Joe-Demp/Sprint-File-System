@@ -1,5 +1,6 @@
 package queries;
 
+import util.FilePipeline;
 import util.QueryHandler;
 import util.ResponseHandler;
 
@@ -14,12 +15,28 @@ import java.util.Queue;
  * A class to handle 'crawling' the file system to query files
  */
 public class FileSystemCrawler implements Runnable {
+    private final FilePipeline pipeline;
     private File searchRoot;
     private Class<? extends Query> queryClass;
     private Constructor<? extends Query> queryConstructor;
     private QueryHandler queryHandler;
     private ResponseHandler responseHandler;
 
+    /**
+     * todo fill in
+     *
+     * @param searchRoot
+     * @param queryClass
+     * @param queryHandler
+     * @param responseHandler
+     * @throws NoSuchMethodException
+     */
+    public FileSystemCrawler(File searchRoot,
+                             Class<? extends Query> queryClass,
+                             QueryHandler queryHandler,
+                             ResponseHandler responseHandler) throws NoSuchMethodException {
+        this(searchRoot, queryClass, queryHandler, responseHandler, null);
+    }
 
     /**
      * Creates a file system crawler, starting from the specified path and querying files using the specified query
@@ -28,17 +45,21 @@ public class FileSystemCrawler implements Runnable {
      * @param queryClass      the {@code Class} object that represents the {@code Query} to apply
      * @param queryHandler    the {@code Handler} that executes the queries, described by {@code queryClass}
      * @param responseHandler the {@code Handler} that routes QueryResponses to the correct endpoint
+     * @param pipeline        a collection to hold {@code Files} in, to pass to other programs, potentially a
+     *                        {@link commands.FileSystemEditor}
      * @throws NoSuchMethodException if the specified {@code queryClass} does not have a constructor that
      *                               accepts a single {@code Path} object
      */
     public FileSystemCrawler(File searchRoot,
                              Class<? extends Query> queryClass,
                              QueryHandler queryHandler,
-                             ResponseHandler responseHandler) throws NoSuchMethodException {
+                             ResponseHandler responseHandler,
+                             FilePipeline pipeline) throws NoSuchMethodException {
         setSearchRoot(searchRoot);
         this.queryClass = queryClass;
         this.queryHandler = queryHandler;
         this.responseHandler = responseHandler;
+        this.pipeline = pipeline;
         this.queryConstructor = queryClass.getConstructor(File.class);
     }
 
@@ -58,7 +79,7 @@ public class FileSystemCrawler implements Runnable {
             }
         }
 
-        System.out.printf("FileSystemCrawler.run finished with query %s", queryClass);
+        System.out.printf("FileSystemCrawler.run finished with query %s.\n", queryClass);
     }
 
     /**
@@ -86,12 +107,18 @@ public class FileSystemCrawler implements Runnable {
         try {
             Query query = queryConstructor.newInstance(file);
             QueryResponse response = queryHandler.handle(query);
+
             responseHandler.handle(response);
-        } catch (InstantiationException
-                | IllegalAccessException
-                | InvocationTargetException e) {
-            e.printStackTrace();
+            if (response.success()) {
+                pipeline.put(file);
+            }
             // TODO add logging here
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            System.err.printf("Issue with queryConstructor.newInstance(file) in %s.\n", FileSystemCrawler.class);
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            System.err.printf("Interrupted while calling pipeline.put(file) in %s.\n", FileSystemCrawler.class);
+            e.printStackTrace();
         }
     }
 

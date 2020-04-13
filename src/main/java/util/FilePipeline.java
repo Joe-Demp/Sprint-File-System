@@ -13,16 +13,16 @@ public interface FilePipeline {
      *
      * @param file
      */
-    void put(File file);
+    void put(File file) throws InterruptedException;
 
     /**
      * todo fill in
      *
      * @return
      */
-    File take();
+    File take() throws InterruptedException;
 
-    default void close() {
+    default void close() throws InterruptedException {
         put(new NullFile());
     }
 }

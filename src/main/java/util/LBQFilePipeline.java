@@ -1,15 +1,22 @@
 package util;
 
 import java.io.File;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ *
+ */
 public class LBQFilePipeline implements FilePipeline {
-    @Override
-    public void put(File file) {
+    private BlockingQueue<File> queue = new LinkedBlockingQueue<>();
 
+    @Override
+    public void put(File file) throws InterruptedException {
+        queue.put(file);
     }
 
     @Override
-    public File take() {
-        return null;
+    public File take() throws InterruptedException {
+        return queue.take();
     }
 }
