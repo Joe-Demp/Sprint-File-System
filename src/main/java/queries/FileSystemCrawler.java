@@ -9,13 +9,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.Queue;
 
 /**
  * A class to handle 'crawling' the file system to query files
  */
 public class FileSystemCrawler implements Runnable {
-    private final FilePipeline pipeline;
+    private FilePipeline pipeline;
     private File searchRoot;
     private Class<? extends Query> queryClass;
     private Constructor<? extends Query> queryConstructor;
@@ -79,6 +80,8 @@ public class FileSystemCrawler implements Runnable {
             }
         }
 
+        // Close the file pipeline and print a closing message
+        closePipeline();
         System.out.printf("FileSystemCrawler.run finished with query %s.\n", queryClass);
     }
 
@@ -100,6 +103,7 @@ public class FileSystemCrawler implements Runnable {
     /**
      * Constructs a {@code Query} of the type specified in this class's constructor for the file represented by the
      * given {@code File}
+     * todo update this
      *
      * @param file the file to be queried
      */
@@ -109,7 +113,9 @@ public class FileSystemCrawler implements Runnable {
             QueryResponse response = queryHandler.handle(query);
 
             responseHandler.handle(response);
-            if (response.success()) {
+
+            // if this FileCrawler is associated with a
+            if (Objects.nonNull(pipeline) && response.success()) {
                 pipeline.put(file);
             }
             // TODO add logging here
@@ -137,5 +143,14 @@ public class FileSystemCrawler implements Runnable {
         }
 
         this.searchRoot = file;
+    }
+
+    private void closePipeline() {
+        try {
+            pipeline.close();
+        } catch (InterruptedException e) {
+            System.err.println("Error on closing the FilePipeline.");
+            e.printStackTrace();
+        }
     }
 }

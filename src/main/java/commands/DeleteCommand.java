@@ -48,6 +48,7 @@ public class DeleteCommand implements Command {
         //  if all good, execute delete return a positive response
         boolean result;
 
+        // todo fix these messages (too long)
         if (file.isFile() && fileAction) {
             result = file.delete();
             return new DeleteCommandResponse(result, file,
