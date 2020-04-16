@@ -5,23 +5,24 @@ import queries.NullFile;
 import java.io.File;
 
 /**
- * todo fill in
+ * A contract for objects that pass {@code Files} from one entity to another.
  */
 public interface FilePipeline {
     /**
-     * todo fill in
-     *
-     * @param file
+     * Adds a {@code File} to the pipeline
      */
     void put(File file) throws InterruptedException;
 
     /**
-     * todo fill in
+     * Removes and returns a {@code File} from the pipeline
      *
-     * @return
+     * @throws InterruptedException if the Thread backing this FilePipeline gets interrupted
      */
     File take() throws InterruptedException;
 
+    /**
+     * Signals to the receiver of this pipeline that the last element has been taken
+     */
     default void close() throws InterruptedException {
         put(new NullFile());
     }

@@ -11,6 +11,7 @@ public abstract class FileSystemActionResponse {
      * Format string for message.<br>
      * Arguments are: current time, filename, success/fail indicator and message
      */
+    // todo reassess this message format
     public static final String Format = "%s -- %s - %s: %s";
     private boolean success;
     private File file;
@@ -31,6 +32,7 @@ public abstract class FileSystemActionResponse {
     public FileSystemActionResponse(boolean success, File file, String message, String indicator) {
         this.success = success;
         this.file = file;
+        // todo do we need this level of customisation with the message?
         this.message = String.format(Format, Instant.now(), file, indicator, message);
     }
 

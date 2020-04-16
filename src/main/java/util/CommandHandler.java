@@ -3,7 +3,7 @@ package util;
 import commands.CommandResponse;
 
 /**
- * TODO fill in
+ * A class to accept and execute commands
  */
 public class CommandHandler implements FileSystemActionHandler {
     @Override

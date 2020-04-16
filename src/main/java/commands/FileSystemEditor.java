@@ -29,27 +29,30 @@ public class FileSystemEditor implements Runnable {
 
     @Override
     public void run() {
-        File file = new NullFile();
+        File file = takeFile();
 
-        // todo fix this so the null file is not processed and output to the user
-        do {
-            try {
-                file = pipeline.take();
-
-                runCommand(file);
-            } catch (InterruptedException e) {
-                System.err.println("FilePipeline was interrupted while waiting");
-                e.printStackTrace();
-            }
-        } while (!(file instanceof NullFile));
+        while (!(file instanceof NullFile)) {
+            runCommand(file);
+            file = takeFile();
+        }
 
         System.out.printf("FileSystemEditor.run finished with command %s.\n", commandClass);
     }
 
+    private File takeFile() {
+        try {
+            return pipeline.take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return new NullFile();
+    }
+
     /**
-     * TODO fill in
+     * Takes file, constructs the specified {@code Command} and passes it to the {@code CommandHandler}.
+     * Then passes the response to the {@code ResponseHandler}.
      *
-     * @param file
+     * @param file the {@code File} to execute the {@code Command} on
      */
     private void runCommand(File file) {
         try {

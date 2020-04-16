@@ -47,20 +47,20 @@ public class DeleteCommand implements Command {
         // Checks that this command matches the given file type (file or directory)
         //  if all good, execute delete return a positive response
         boolean result;
+        String filename = file.getName();
 
-        // todo fix these messages (too long)
         if (file.isFile() && fileAction) {
             result = file.delete();
             return new DeleteCommandResponse(result, file,
                     result ?
-                            String.format("File %s deleted", file) :
-                            String.format("File %s not deleted", file));
+                            String.format("File %s deleted", filename) :
+                            String.format("File %s not deleted", filename));
         } else if (file.isDirectory() && directoryAction) {
             result = file.delete();
             return new DeleteCommandResponse(result, file,
                     result ?
-                            String.format("Directory %s deleted", file) :
-                            String.format("Directory %s not deleted", file));
+                            String.format("Directory %s deleted", filename) :
+                            String.format("Directory %s not deleted", filename));
         }
 
         // Failure if no permission to delete file or directory

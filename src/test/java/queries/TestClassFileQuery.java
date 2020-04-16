@@ -13,23 +13,23 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class TestClassFileQuery {
-    public static final String path1 = "/j/myfiles/file1.class";
-    public static final String path2 = "/j/myfiles/file2.txt";
-    public static final String path3 = "/j/myfiles/file3.class";
+    public static final String pathExistingClassFile = "/j/myfiles/file1.class";
+    public static final String pathExistingTextFile = "/j/myfiles/file2.txt";
+    public static final String pathNonExistingClassFile = "/j/myfiles/file3.class";
 
-    public static File mockFile1;   // a class file that exists
-    public static File mockFile2;   // a non-class file that exists
-    public static File mockFile3;   // a class file that doesn't exist
+    public static File existingClassFile;   // a class file that exists
+    public static File existingTextFile;   // a non-class file that exists
+    public static File nonExistingClassFile;   // a class file that doesn't exist
 
-    public static ClassFileQuery query1;
-    public static ClassFileQuery query2;
-    public static ClassFileQuery query3;
+    public static ClassFileQuery queryExistingClassFile;
+    public static ClassFileQuery queryExistingTextFile;
+    public static ClassFileQuery queryNonExistingClassFile;
 
     @BeforeAll
     static void setup() {
-        mockFile1 = makeMockFile(path1, "file1.class", true);
-        mockFile2 = makeMockFile(path2, "file2.txt", true);
-        mockFile3 = makeMockFile(path3, "file3.class", false);
+        existingClassFile = makeMockFile(pathExistingClassFile, "file1.class", true);
+        existingTextFile = makeMockFile(pathExistingTextFile, "file2.txt", true);
+        nonExistingClassFile = makeMockFile(pathNonExistingClassFile, "file3.class", false);
     }
 
     private static File makeMockFile(String path, String filename, boolean exists) {
@@ -42,98 +42,101 @@ public class TestClassFileQuery {
 
     @BeforeEach
     public void beforeEach() {
-        query1 = new ClassFileQuery(mockFile1);
-        query2 = new ClassFileQuery(mockFile2);
-        query3 = new ClassFileQuery(mockFile3);
+        queryExistingClassFile = new ClassFileQuery(existingClassFile);
+        queryExistingTextFile = new ClassFileQuery(existingTextFile);
+        queryNonExistingClassFile = new ClassFileQuery(nonExistingClassFile);
     }
 
     @AfterEach
     public void afterEach() {
-        query1 = query2 = query3 = null;
+        queryExistingClassFile = queryExistingTextFile = queryNonExistingClassFile = null;
     }
 
     @Test
     public void test_constructor() {
-        assertEquals(mockFile1, query1.getFile());
-        assertFalse(query1.isDirectoryAction());
-        assertTrue(query1.isFileAction());
+        assertEquals(existingClassFile, queryExistingClassFile.getFile());
+        assertFalse(queryExistingClassFile.isDirectoryAction());
+        assertTrue(queryExistingClassFile.isFileAction());
     }
 
     @Test
     public void test_executeSuccess() {
-        QueryResponse response = query1.execute();
+        QueryResponse response = queryExistingClassFile.execute();
 
         assertNotNull(response);
         assertTrue(response.success());
-        assertEquals(mockFile1, response.file());
+        assertEquals(existingClassFile, response.file());
 
-        String expectedMessageSuffix = String.format(" %s - %s: %s", path1, ".class file found", "file1.class found");
+        String expectedMessageSuffix = String.format(" %s - %s: %s", pathExistingClassFile,
+                ".class file found", "file1.class found");
         String actualMessageSuffix = response.message().split("--")[1];
         assertEquals(expectedMessageSuffix, actualMessageSuffix);
     }
 
     @Test
     public void test_executeFailure_fileExists() {
-        QueryResponse response = query2.execute();
+        QueryResponse response = queryExistingTextFile.execute();
 
         assertNotNull(response);
         assertFalse(response.success());
-        assertEquals(mockFile2, response.file());
+        assertEquals(existingTextFile, response.file());
 
-        String expectedMessageSuffix = String.format(" %s - %s: %s", path2, ".class file not found", "file2.txt not a .class file");
+        String expectedMessageSuffix = String.format(" %s - %s: %s", pathExistingTextFile,
+                ".class file not found", "file2.txt not a .class file");
         String actualMessageSuffix = response.message().split("--")[1];
         assertEquals(expectedMessageSuffix, actualMessageSuffix);
     }
 
     @Test
     public void test_executeFailure_noFile() {
-        QueryResponse response = query3.execute();
+        QueryResponse response = queryNonExistingClassFile.execute();
 
         assertNotNull(response);
         assertFalse(response.success());
-        assertEquals(mockFile3, response.file());
+        assertEquals(nonExistingClassFile, response.file());
 
-        String expectedMessageSuffix = String.format(" %s - %s: %s", path3, ".class file not found", "file3.class does not exist");
+        String expectedMessageSuffix = String.format(" %s - %s: %s", pathNonExistingClassFile,
+                ".class file not found", "file3.class does not exist");
         String actualMessageSuffix = response.message().split("--")[1];
         assertEquals(expectedMessageSuffix, actualMessageSuffix);
     }
 
     @Test
     public void test_get_set_File() {
-        assertEquals(mockFile1, query1.getFile());
+        assertEquals(existingClassFile, queryExistingClassFile.getFile());
 
-        query1.setFile(mockFile2);
-        assertEquals(mockFile2, query1.getFile());
+        queryExistingClassFile.setFile(existingTextFile);
+        assertEquals(existingTextFile, queryExistingClassFile.getFile());
     }
 
     @Test
     public void test_isDirectoryAction() {
-        assertFalse(query1.isDirectoryAction());
+        assertFalse(queryExistingClassFile.isDirectoryAction());
     }
 
     @Test
     public void test_setDirectoryAction() {
-        assertDoesNotThrow(() -> query1.setDirectoryAction(false));
+        assertDoesNotThrow(() -> queryExistingClassFile.setDirectoryAction(false));
 
         Throwable throwable = assertThrows(
                 UnsupportedSetException.class,
-                () -> query1.setDirectoryAction(true));
+                () -> queryExistingClassFile.setDirectoryAction(true));
 
         assertNotNull(throwable.getMessage(), "Error messages should not be null.");
     }
 
     @Test
     public void test_isFileAction() {
-        assertTrue(query1.isFileAction());
+        assertTrue(queryExistingClassFile.isFileAction());
     }
 
     @Test
     public void test_setFileAction() {
-        assertDoesNotThrow(() -> query1.setFileAction(true));
+        assertDoesNotThrow(() -> queryExistingClassFile.setFileAction(true));
 
         Throwable throwable = assertThrows(
                 UnsupportedSetException.class,
-                () -> query1.setFileAction(false));
+                () -> queryExistingClassFile.setFileAction(false));
 
         assertNotNull(throwable.getMessage(), "Error messages should not be null.");
     }
