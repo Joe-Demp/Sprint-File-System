@@ -1,4 +1,7 @@
-package util;
+package util.handlers;
+
+import util.actions.FileSystemAction;
+import util.actions.FileSystemActionResponse;
 
 /**
  * A contract to enforce all handlers across the project to specify a method handle, to execute {@code FileSystemAction}

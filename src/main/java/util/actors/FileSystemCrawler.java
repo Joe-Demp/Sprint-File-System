@@ -1,8 +1,10 @@
-package queries;
+package util.actors;
 
-import util.FilePipeline;
-import util.QueryHandler;
-import util.ResponseHandler;
+import queries.Query;
+import queries.QueryResponse;
+import util.handlers.QueryHandler;
+import util.handlers.ResponseHandler;
+import util.pipelines.FilePipeline;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -48,7 +50,7 @@ public class FileSystemCrawler implements Runnable {
      * @param queryHandler    the {@code Handler} that executes the queries, described by {@code queryClass}
      * @param responseHandler the {@code Handler} that routes QueryResponses to the correct endpoint
      * @param pipeline        a collection to hold {@code Files} in, to pass to other programs, potentially a
-     *                        {@link commands.FileSystemEditor}
+     *                        {@link FileSystemEditor}
      * @throws NoSuchMethodException if the specified {@code queryClass} does not have a constructor that
      *                               accepts a single {@code Path} object
      */

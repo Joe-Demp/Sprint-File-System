@@ -1,6 +1,6 @@
 package commands;
 
-import util.FileSystemAction;
+import util.actions.FileSystemAction;
 
 /**
  * Template for actions that cause changes to the filesystem

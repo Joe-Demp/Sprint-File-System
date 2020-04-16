@@ -1,11 +1,11 @@
 import commands.DeleteCommand;
-import commands.FileSystemEditor;
 import queries.ClassFileQuery;
-import queries.FileSystemCrawler;
-import util.CommandHandler;
-import util.FilePipeline;
-import util.LBQFilePipeline;
-import util.QueryHandler;
+import util.actors.FileSystemCrawler;
+import util.actors.FileSystemEditor;
+import util.handlers.CommandHandler;
+import util.handlers.QueryHandler;
+import util.pipelines.FilePipeline;
+import util.pipelines.LBQFilePipeline;
 
 import java.io.File;
 import java.io.IOException;

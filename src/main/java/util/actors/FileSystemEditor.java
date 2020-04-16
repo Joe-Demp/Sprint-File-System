@@ -1,9 +1,11 @@
-package commands;
+package util.actors;
 
-import queries.NullFile;
-import util.CommandHandler;
-import util.FilePipeline;
-import util.ResponseHandler;
+import commands.Command;
+import commands.CommandResponse;
+import util.handlers.CommandHandler;
+import util.handlers.ResponseHandler;
+import util.pipelines.FilePipeline;
+import util.pipelines.NullFile;
 
 import java.io.File;
 import java.lang.reflect.Constructor;

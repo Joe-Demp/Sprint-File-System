@@ -1,6 +1,6 @@
 package queries;
 
-import util.FileSystemAction;
+import util.actions.FileSystemAction;
 
 /**
  * A template for actions that gather information about the file system

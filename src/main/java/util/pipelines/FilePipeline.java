@@ -1,6 +1,4 @@
-package util;
-
-import queries.NullFile;
+package util.pipelines;
 
 import java.io.File;
 

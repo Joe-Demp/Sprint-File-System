@@ -1,4 +1,4 @@
-package queries;
+package util.pipelines;
 
 import java.io.File;
 

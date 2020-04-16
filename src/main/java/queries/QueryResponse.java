@@ -1,6 +1,6 @@
 package queries;
 
-import util.FileSystemActionResponse;
+import util.actions.FileSystemActionResponse;
 
 import java.io.File;
 
