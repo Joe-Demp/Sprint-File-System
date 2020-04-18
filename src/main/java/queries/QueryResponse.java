@@ -14,6 +14,6 @@ public class QueryResponse extends FileSystemActionResponse {
      * @param message an explanation of this {@code QueryResponse}
      */
     public QueryResponse(boolean success, File file, String message) {
-        super(success, file, message, "");
+        super(success, file, message);
     }
 }

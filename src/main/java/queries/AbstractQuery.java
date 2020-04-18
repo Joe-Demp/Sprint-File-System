@@ -40,7 +40,7 @@ public abstract class AbstractQuery implements Query {
         }
 
         public static FileNotFoundQueryResponse get(File file) {
-            return new FileNotFoundQueryResponse(false, file, "File not found");
+            return new FileNotFoundQueryResponse(false, file, "file not found");
         }
     }
 }

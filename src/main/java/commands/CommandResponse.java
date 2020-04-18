@@ -14,6 +14,6 @@ public class CommandResponse extends FileSystemActionResponse {
      * @param message an explanation of this {@code CommandResponse}
      */
     public CommandResponse(boolean success, File file, String message) {
-        super(success, file, message, "");
+        super(success, file, message);
     }
 }
