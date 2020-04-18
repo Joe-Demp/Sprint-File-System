@@ -2,119 +2,19 @@ package commands;
 
 import java.io.File;
 
-/**
- * A command to delete files or directories
- */
-public class DeleteCommand implements Command {
-    private boolean directoryAction;
-    private File file;
-    private boolean fileAction;
-
-    /**
-     * Constructs a DeleteCommand for a file with the specified path
-     *
-     * @param file the path of the file to delete
-     */
+public class DeleteCommand extends AbstractCommand {
     public DeleteCommand(File file) {
-        this(file, false, true);
-    }
-
-    /**
-     * Constructs a DeleteCommand for a file or directory at the specified path
-     *
-     * @param file          the path of the file or directory to delete
-     * @param onDirectories true if the command acts on directories, false if not
-     */
-    public DeleteCommand(File file, boolean onDirectories) {
-        this(file, onDirectories, true);
-    }
-
-    /**
-     * Constructs a DeleteCommand for a file or directory at the specified path
-     *
-     * @param file          the path of the file or directory to delete
-     * @param onDirectories true if the command acts on directories, false if not
-     * @param onFiles       true if the command acts on files, false if not
-     */
-    public DeleteCommand(File file, boolean onDirectories, boolean onFiles) {
-        setFile(file);
-        setDirectoryAction(onDirectories);
-        setFileAction(onFiles);
+        super(file);
     }
 
     @Override
-    public CommandResponse execute() {
-        // Checks that this command matches the given file type (file or directory)
-        //  if all good, execute delete return a positive response
-        boolean result;
-        String filename = file.getName();
-
-        if (file.isFile() && fileAction) {
-            result = file.delete();
-            return new DeleteCommandResponse(result, file,
-                    result ?
-                            String.format("File %s deleted", filename) :
-                            String.format("File %s not deleted", filename));
-        } else if (file.isDirectory() && directoryAction) {
-            result = file.delete();
-            return new DeleteCommandResponse(result, file,
-                    result ?
-                            String.format("Directory %s deleted", filename) :
-                            String.format("Directory %s not deleted", filename));
-        }
-
-        // Failure if no permission to delete file or directory
-        return new DeleteCommandResponse(false, file, "Command had no permissions.");
+    protected boolean triggerAction() {
+        return file.delete();
     }
 
     @Override
-    public File getFile() {
-        return file;
-    }
-
-    @Override
-    public void setFile(File file) {
-        this.file = file;
-    }
-
-    @Override
-    public boolean isDirectoryAction() {
-        return directoryAction;
-    }
-
-    @Override
-    public void setDirectoryAction(boolean canActOnDirectories) {
-        this.directoryAction = canActOnDirectories;
-    }
-
-    @Override
-    public boolean isFileAction() {
-        return fileAction;
-    }
-
-    @Override
-    public void setFileAction(boolean canActOnFiles) {
-        this.fileAction = canActOnFiles;
-    }
-
-    /**
-     * A class to model responses from delete commands
-     */
-    private static class DeleteCommandResponse extends CommandResponse {
-        /**
-         * Calls the {@code FileSystemActionResponse} constructor
-         *
-         * @param success true if the {@code DeleteCommand} should have worked successfully. i.e. If the
-         *                {@code DeleteCommand} has permissions to delete the {@code File} specified
-         * @param file    the {@code File} that was to be deleted
-         * @param message an explanation of this {@code DeleteResponse}
-         */
-        public DeleteCommandResponse(boolean success, File file, String message) {
-            super(success, file, message, indicator(success));
-        }
-
-        private static String indicator(boolean success) {
-            return success ? "SUCCESS - File Deleted" : "FAILURE - File Not Deleted";
-        }
+    protected CommandResponse makeResponse(boolean success) {
+        String message = success ? "deleted" : "not deleted";
+        return new CommandResponse(success, file, message);
     }
 }

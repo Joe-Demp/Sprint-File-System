@@ -1,6 +1,5 @@
 package queries;
 
-import exceptions.UnsupportedSetException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -99,45 +98,5 @@ public class TestClassFileQuery {
                 ".class file not found", "file3.class does not exist");
         String actualMessageSuffix = response.message().split("--")[1];
         assertEquals(expectedMessageSuffix, actualMessageSuffix);
-    }
-
-    @Test
-    public void test_get_set_File() {
-        assertEquals(existingClassFile, queryExistingClassFile.getFile());
-
-        queryExistingClassFile.setFile(existingTextFile);
-        assertEquals(existingTextFile, queryExistingClassFile.getFile());
-    }
-
-    @Test
-    public void test_isDirectoryAction() {
-        assertFalse(queryExistingClassFile.isDirectoryAction());
-    }
-
-    @Test
-    public void test_setDirectoryAction() {
-        assertDoesNotThrow(() -> queryExistingClassFile.setDirectoryAction(false));
-
-        Throwable throwable = assertThrows(
-                UnsupportedSetException.class,
-                () -> queryExistingClassFile.setDirectoryAction(true));
-
-        assertNotNull(throwable.getMessage(), "Error messages should not be null.");
-    }
-
-    @Test
-    public void test_isFileAction() {
-        assertTrue(queryExistingClassFile.isFileAction());
-    }
-
-    @Test
-    public void test_setFileAction() {
-        assertDoesNotThrow(() -> queryExistingClassFile.setFileAction(true));
-
-        Throwable throwable = assertThrows(
-                UnsupportedSetException.class,
-                () -> queryExistingClassFile.setFileAction(false));
-
-        assertNotNull(throwable.getMessage(), "Error messages should not be null.");
     }
 }
