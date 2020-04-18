@@ -4,48 +4,68 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.nio.file.FileSystem;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TestDeleteCommand {
-    public static FileSystem mockFS;
-    public static File mockFile1;
-    public static File mockFile2;
+    public static final String pathDeletes = "/j/myfiles/file1.class";
+    public static final String pathDoesNotDelete = "/j/myfiles/file2.class";
+
+    public static final String successMsg = String.format(" %s - SUCCESS deleted", pathDeletes);
+    public static final String failMsg = String.format(" %s - FAILURE not deleted", pathDoesNotDelete);
+
+    public static File fileDeletes;
+    public static File fileDoesNotDelete;
+
+    public static Command successfulCmd;
+    public static Command failureCmd;
 
     @BeforeAll
     static void beforeAll() {
-        // TODO reconsider this; can I really mock the FileSystem, Path and File objects?
-        //      Maybe if I just want to get the responses.
-        mockFS = mock(FileSystem.class);
+        fileDeletes = makeFileThatDeletes();
+        fileDoesNotDelete = makeFileThatDoesNotDelete();
 
-        mockFile1 = mock(File.class);
-        mockFile2 = mock(File.class);
+        successfulCmd = new DeleteCommand(fileDeletes);
+        failureCmd = new DeleteCommand(fileDoesNotDelete);
     }
 
-    // todo fix the tests. It does not build
+    private static File makeFileThatDeletes() {
+        File file = mock(File.class);
+        when(file.toString()).thenReturn(pathDeletes);
+        when(file.delete()).thenReturn(true);
+        return file;
+    }
 
-    @Test
-    public void testConstructor() {
-        DeleteCommand command = new DeleteCommand(mockFile1);
-
-        assertEquals(mockFile1, command.getFile());
-        assertFalse(command.isDirectoryAction());
-        assertTrue(command.isFileAction());
+    private static File makeFileThatDoesNotDelete() {
+        File file = mock(File.class);
+        when(file.toString()).thenReturn(pathDoesNotDelete);
+        when(file.delete()).thenReturn(false);
+        return file;
     }
 
     @Test
-    public void test_execute_noPermissions() {
-        DeleteCommand command = new DeleteCommand(mockFile1, false, false);
-        CommandResponse response = command.execute();
-        String expectedMessageSuffix = " FAILURE - File Not Deleted: Command had no permissions.";
+    public void test_executeSuccess() {
+        CommandResponse response = successfulCmd.execute();
 
+        assertNotNull(response);
+        assertTrue(response.success());
+        assertEquals(fileDeletes, response.file());
 
+        String actualMessageSuffix = response.message().split("--")[1];
+        assertEquals(successMsg, actualMessageSuffix);
+    }
+
+    @Test
+    public void test_executeFailure() {
+        CommandResponse response = failureCmd.execute();
+
+        assertNotNull(response);
         assertFalse(response.success());
-        assertTrue(response.message().endsWith(expectedMessageSuffix));
-    }
+        assertEquals(fileDoesNotDelete, response.file());
 
-    // TODO tests for a positive action i.e. a correct deletion of a file or directory
+        String actualMessageSuffix = response.message().split("--")[1];
+        assertEquals(failMsg, actualMessageSuffix);
+    }
 }
