@@ -1,8 +1,7 @@
-import commands.DeleteCommand;
+import commands.MoveCommand;
 import queries.ClassFileQuery;
 import util.actors.FileSystemCrawler;
 import util.actors.FileSystemEditor;
-import util.handlers.CommandHandler;
 import util.handlers.QueryHandler;
 import util.pipelines.FilePipeline;
 import util.pipelines.LBQFilePipeline;
@@ -12,6 +11,7 @@ import java.io.IOException;
 
 public class Main {
     public static final String PATH = "C:\\Users\\demps\\Desktop\\SprintFS Demo\\";
+    public static final String TARGET = "C:\\Users\\demps\\Desktop\\SprintFS Target\\";
     public static final int NUMBER_OF_FILES = 10;
 
     public static void main(String[] args) {
@@ -34,9 +34,9 @@ public class Main {
 
             new Thread(new FileSystemEditor(
                     pipeline,
-                    DeleteCommand.class,
-                    new CommandHandler(),
-                    System.out::println)).start();
+                    MoveCommand.class,
+                    System.out::println,
+                    TARGET)).start();
         } catch (NoSuchMethodException nsme) {
             System.out.println(nsme.getMessage());
         }
@@ -47,5 +47,9 @@ public class Main {
             String filename = String.format("%sfile%d.class", PATH, i);
             new File(filename).createNewFile();
         }
+
+        File target = new File(TARGET);
+        boolean directoryMade = target.mkdir();
+        System.out.println(directoryMade ? "Target directory made" : "Directory not made");
     }
 }
