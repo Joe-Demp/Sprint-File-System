@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class TestDeleteCommand {
     public static final String pathDeletes = "/j/myfiles/file1.class";
@@ -67,5 +66,14 @@ public class TestDeleteCommand {
 
         String actualMessageSuffix = response.message().split("--")[1];
         assertEquals(failMsg, actualMessageSuffix);
+    }
+
+    /**
+     * Checks that execute actually triggers 'delete' on the file
+     */
+    @Test
+    public void test_executeTriggersDelete() {
+        successfulCmd.execute();
+        verify(fileDeletes).delete();
     }
 }

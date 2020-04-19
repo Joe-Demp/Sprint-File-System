@@ -15,17 +15,15 @@ public class FileSystemEditor implements Runnable {
     private FilePipeline pipeline;
     private Class<? extends Command> commandClass;
     private Constructor<? extends Command> commandConstructor;
-    private CommandHandler commandHandler;
+    private CommandHandler commandHandler = new CommandHandler();
     private ResponseHandler responseHandler;
 
     public FileSystemEditor(FilePipeline pipeline,
                             Class<? extends Command> commandClass,
-                            CommandHandler commandHandler,
                             ResponseHandler responseHandler) throws NoSuchMethodException {
         this.pipeline = pipeline;
         this.commandClass = commandClass;
         this.commandConstructor = commandClass.getConstructor(File.class);
-        this.commandHandler = commandHandler;
         this.responseHandler = responseHandler;
     }
 
