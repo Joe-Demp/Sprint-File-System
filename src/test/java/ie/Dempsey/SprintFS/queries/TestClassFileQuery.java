@@ -1,4 +1,4 @@
-package queries;
+package ie.Dempsey.SprintFS.queries;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
