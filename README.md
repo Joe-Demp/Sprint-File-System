@@ -1,5 +1,14 @@
 # System Search
 
+## Current Status
+*as of 21/05/2020*
+The project is lying dormant for the moment. I intend to revisit it when I am finished with other work and
+I can wrap my head around creating a usable console app and GUI app.
+
+The work that went unseen here was my attempt to get a JavaFX 'hello world' app running (which was too painful).
+I couldn't get even a simple app to run on my machine.
+I think I'll resort to Swing or some other toolset for creating the GUI when the time comes. 
+
 ## Design Goals
 * crawl quickly through the filesystem
 * execute commands and queries on the filesystem
